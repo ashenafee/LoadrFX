@@ -133,6 +133,13 @@ public class Downloader {
 
         } else {
 
+            // Execute chmod +x on the ffmpeg executable
+            try {
+                Runtime.getRuntime().exec("chmod a+x " + cwd + "/src/main/java/com/loadrfx/frameworks/ffmpeg-mac");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             if (downloadType.equals("MyMediaVideo")) {
                 path = cwd + "/src/main/java/com/loadrfx/frameworks/ffmpeg-mac";
             } else {
