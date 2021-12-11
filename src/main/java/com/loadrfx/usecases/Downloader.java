@@ -29,6 +29,14 @@ public class Downloader {
 
         String[] setup = setupDownload(filename, format);
 
+        // Sleep
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
         // Build the download command
         if (video instanceof MyMediaVideo) {
             cmd = commandMyMedia(setup[0], setup[1]);
@@ -133,10 +141,19 @@ public class Downloader {
 
         } else {
 
-            // Execute chmod +x on the ffmpeg executable
+            // Execute chmod on ffmpeg so it's executable
             try {
-                Runtime.getRuntime().exec("chmod a+x " + cwd + "/src/main/java/com/loadrfx/frameworks/ffmpeg-mac");
-            } catch (IOException e) {
+                String[] cmd = new String[]{"chmod", "+x", cwd + "/src/main/java/com/loadrfx/frameworks/ffmpeg-mac"};
+                ProcessBuilder pb = new ProcessBuilder(cmd);
+                pb.redirectErrorStream(true);
+                Process process = pb.start();
+                InputStream is = process.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                String line;
+                while ((line = reader.readLine()) != null)
+                    System.out.println(line);
+                process.waitFor();
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
 
