@@ -6,6 +6,7 @@ import com.loadrfx.entities.YoutubeVideo;
 
 import java.io.*;
 import java.net.URL;
+import java.util.Objects;
 
 public class Downloader {
 
@@ -83,7 +84,7 @@ public class Downloader {
         // Get cwd
         String cwd = System.getProperty("user.dir");
         // Check if Windows or macOS
-        String path = checkSystem(cwd, video.getClass().getSimpleName());
+        String path = checkSystem(video.getClass().getSimpleName());
 
         String savePath = filename + "." + format;
         // Return a list of Strings
@@ -122,35 +123,34 @@ public class Downloader {
 
     /**
      * Check if Windows or macOS and the type of executable.
-     * @param cwd - current working directory
      * @param downloadType - type of download
      * @return - path to the executable
      */
-    private String checkSystem(String cwd, String downloadType) {
+    private String checkSystem(String downloadType) {
         String path;
         if (System.getProperty("os.name").contains("Windows")) {
 
             if (downloadType.equals("MyMediaVideo")) {
-                path = cwd + "\\src\\main\\java\\com\\loadrfx\\frameworks\\win\\ffmpeg.exe";
+                path = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/win/ffmpeg.exe")).getPath();
             } else {
-                path = cwd + "\\src\\main\\java\\com\\loadrfx\\frameworks\\win\\yt-dlp.exe";
+                path = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/win/yt-dlp.exe")).getPath();
             }
 
         } else {
 
             String binary;
             if (downloadType.equals("MyMediaVideo")) {
-                binary = "/src/main/java/com/loadrfx/frameworks/mac/ffmpeg";
+                binary = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/ffmpeg")).getPath();
             } else {
-                binary = "/src/main/java/com/loadrfx/frameworks/mac/yt-dlp";
+                binary = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/yt-dlp")).getPath();
             }
 
-            chmodBinary(cwd, binary);
+            chmodBinary(binary);
 
             if (downloadType.equals("MyMediaVideo")) {
-                path = cwd + "/src/main/java/com/loadrfx/frameworks/mac/ffmpeg";
+                path = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/ffmpeg")).getPath();
             } else {
-                path = cwd + "/src/main/java/com/loadrfx/frameworks/mac/yt-dlp";
+                path = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/yt-dlp")).getPath();
             }
 
         }
@@ -159,12 +159,11 @@ public class Downloader {
 
     /**
      * Change the permissions of the binary.
-     * @param cwd - current working directory
      * @param binary - binary to change permissions
      */
-    private void chmodBinary(String cwd, String binary) {
+    private void chmodBinary(String binary) {
         try {
-            String[] cmd = new String[]{"chmod", "+x", cwd + binary};
+            String[] cmd = new String[]{"chmod", "+x", binary};
             executeCommands(cmd);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
