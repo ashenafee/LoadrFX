@@ -39,7 +39,7 @@ public class Downloader {
         if (video instanceof MyMediaVideo) {
             cmd = commandMyMedia(setup[0], setup[1]);
         } else if (video instanceof YoutubeVideo) {
-            YoutubeVideo youtubeVideo = (YoutubeVideo) video;
+            cmd = commandYoutube(setup[0], setup[1], format);
         }
 
         // Download the video
@@ -134,23 +134,33 @@ public class Downloader {
 
         } else {
 
-            // Execute chmod on ffmpeg so it's executable
-            try {
-                String[] cmd = new String[]{"chmod", "+x", cwd + "/src/main/java/com/loadrfx/frameworks/ffmpeg-mac"};
-                executeCommands(cmd);
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+            String binary = "";
+            if (downloadType.equals("MyMediaVideo")) {
+                binary = "/src/main/java/com/loadrfx/frameworks/mac/ffmpeg";
+            } else {
+                binary = "/src/main/java/com/loadrfx/frameworks/mac/yt-dlp";
             }
 
+            // Execute chmod on ffmpeg/yt-dlp so it's executable
+            chmodBinary(cwd, binary);
+
             if (downloadType.equals("MyMediaVideo")) {
-                path = cwd + "/src/main/java/com/loadrfx/frameworks/ffmpeg-mac";
+                path = cwd + "/src/main/java/com/loadrfx/frameworks/mac/ffmpeg";
             } else {
-                // TODO: Add path for youtube-dl
-                path = "";
+                path = cwd + "/src/main/java/com/loadrfx/frameworks/mac/yt-dlp";
             }
 
         }
         return path;
+    }
+
+    private void chmodBinary(String cwd, String binary) {
+        try {
+            String[] cmd = new String[]{"chmod", "+x", cwd + binary};
+            executeCommands(cmd);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -164,6 +174,14 @@ public class Downloader {
         MyMediaVideo myMediaVideo = (MyMediaVideo) video;
 
         cmd = new String[]{path, "-i", myMediaVideo.getPlaylistLink(), "-codec", "copy", filename};
+        return cmd;
+    }
+
+    private String[] commandYoutube(String filename, String path, String format) {
+        String[] cmd;
+        YoutubeVideo youtubeVideo = (YoutubeVideo) video;
+
+        cmd = new String[]{path, "-o", filename, "-S", "res:1080", youtubeVideo.getLink()};
         return cmd;
     }
 }

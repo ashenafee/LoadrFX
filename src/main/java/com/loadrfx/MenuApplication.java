@@ -2,6 +2,7 @@ package com.loadrfx;
 
 import com.loadrfx.entities.Format;
 import com.loadrfx.entities.MyMediaVideo;
+import com.loadrfx.entities.YoutubeVideo;
 import com.loadrfx.usecases.Downloader;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -171,7 +172,7 @@ public class MenuApplication extends Application {
         ComboBox<Format> formatComboBox = (ComboBox<Format>) scene.lookup("#formatCombo");
 
         if (providerComboBox.getValue().equals("Youtube")) {
-            return;
+            downloadYoutube(scene, videoUrl, filename, formatComboBox);
         } else if (providerComboBox.getValue().equals("MyMedia")) {
             downloadMyMedia(scene, videoUrl, filename, formatComboBox);
         }
@@ -207,6 +208,34 @@ public class MenuApplication extends Application {
         // Download transcript on a new thread
         Thread transcriptThread = new Thread(() -> downloader.downloadTranscript(filename));
         transcriptThread.start();
+    }
+
+    /**
+     * Download the video from YouTube on a separate thread
+     * @param scene
+     * @param videoUrl
+     * @param filename
+     * @param formatComboBox
+     */
+    private void downloadYoutube(Scene scene, String videoUrl, String filename, ComboBox<Format> formatComboBox) {
+        YoutubeVideo myMediaVideo = new YoutubeVideo(videoUrl);
+        Downloader downloader = new Downloader(myMediaVideo);
+
+        // Download the video on a new thread
+        ProgressBar progressBar = (ProgressBar) scene.lookup("#downloadProgress");
+        progressBar.setProgress(-1);
+
+        // Make thread with runnable
+        Thread videoThread = new Thread(() -> {
+            downloader.downloadVideo(filename, formatComboBox.getValue().toString().toLowerCase());
+
+            // Notify main thread that the download is complete
+            Platform.runLater(() -> {
+                // Set progress bar text
+                progressBar.setProgress(0);
+            });
+        });
+        videoThread.start();
     }
 
 
