@@ -49,11 +49,23 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </VBox.margin>
             </TextField>
-            <TextField id="filenameInput" promptText="Save as...">
+            <HBox>
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
-            </TextField>
+               <children>
+                  <TextField id="filenameInput" editable="false" prefHeight="26.0" prefWidth="207.0" promptText="Save as...">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Button id="locationButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="73.0" text="Save as...">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
             <ProgressBar id="downloadProgress" prefHeight="18.0" prefWidth="290.0" progress="0.0">
                <VBox.margin>
                   <Insets left="5.0" />

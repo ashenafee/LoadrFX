@@ -11,8 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MenuApplication extends Application {
@@ -74,6 +76,27 @@ public class MenuApplication extends Application {
         Button downloadButton = (Button) scene.lookup("#downloadButton");
         downloadButton.setOnMouseClicked(event -> {downloadButton(scene);} );
         // TODO: Add a way to disable the download button until all inputs are filled
+
+        // Configure location button
+        Button locationButton = (Button) scene.lookup("#locationButton");
+        locationButton.setOnMouseClicked(event -> {locationButton(scene);} );
+    }
+
+    /**
+     * Sets the location button to open a file chooser
+     * @param scene
+     */
+    private void locationButton(Scene scene) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Download Location");
+        // Print path chosen in file chooser
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file != null) {
+            // Set the location text field
+            TextField filenameInput = (TextField) scene.lookup("#filenameInput");
+            filenameInput.setText(file.getAbsolutePath());
+        }
+
     }
 
     /**
