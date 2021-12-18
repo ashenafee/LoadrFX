@@ -5,17 +5,18 @@ import com.loadrfx.entities.MyMediaVideo;
 import com.loadrfx.usecases.Downloader;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MenuApplication extends Application {
 
@@ -75,11 +76,44 @@ public class MenuApplication extends Application {
         // Configure download button
         Button downloadButton = (Button) scene.lookup("#downloadButton");
         downloadButton.setOnMouseClicked(event -> {downloadButton(scene);} );
-        // TODO: Add a way to disable the download button until all inputs are filled
+        disableDownload(scene, downloadButton);
 
         // Configure location button
         Button locationButton = (Button) scene.lookup("#locationButton");
         locationButton.setOnMouseClicked(event -> {locationButton(scene);} );
+    }
+
+    /**
+     * Wait for all fields to be filled before enabling the download button.
+     * @param scene
+     * @param downloadButton
+     */
+    private void disableDownload(Scene scene, Button downloadButton) {
+        TextField videoInput = (TextField) scene.lookup("#videoInput");
+        TextField filenameInput = (TextField) scene.lookup("#filenameInput");
+        ComboBox<String> providerComboBox = (ComboBox<String>) scene.lookup("#providerCombo");
+        ComboBox<Format> formatComboBox = (ComboBox<Format>) scene.lookup("#formatCombo");
+
+        BooleanBinding videoInputBinding = Bindings.createBooleanBinding(() -> {
+            return !videoInput.getText().isEmpty();
+        }, videoInput.textProperty());
+
+        BooleanBinding filenameInputBinding = Bindings.createBooleanBinding(() -> {
+            return !filenameInput.getText().isEmpty();
+        }, filenameInput.textProperty());
+
+        BooleanBinding providerComboBoxBinding = Bindings.createBooleanBinding(() -> {
+            return providerComboBox.getItems().contains(providerComboBox.getValue());
+                }, providerComboBox.valueProperty());
+
+        BooleanBinding formatComboBoxBinding = Bindings.createBooleanBinding(() -> {
+            return formatComboBox.getItems().contains(formatComboBox.getValue());
+                }, formatComboBox.valueProperty());
+
+        downloadButton.disableProperty().bind(videoInputBinding.not()
+                .or(filenameInputBinding.not())
+                .or(providerComboBoxBinding.not())
+                .or(formatComboBoxBinding.not()));
     }
 
     /**
