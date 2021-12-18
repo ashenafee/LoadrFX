@@ -10,7 +10,6 @@ import java.net.URL;
 public class Downloader {
 
     private final Downloadable video;
-    private String subtitles;
 
     public Downloader(Downloadable video) {
         this.video = video;
@@ -18,8 +17,8 @@ public class Downloader {
 
     /**
      * Download video.
-     * @param filename
-     * @param format
+     * @param filename - name of the file
+     * @param format - format of the file
      */
     public void downloadVideo(String filename, String format) {
 
@@ -39,7 +38,7 @@ public class Downloader {
         if (video instanceof MyMediaVideo) {
             cmd = commandMyMedia(setup[0], setup[1]);
         } else if (video instanceof YoutubeVideo) {
-            cmd = commandYoutube(setup[0], setup[1], format);
+            cmd = commandYoutube(setup[0], setup[1]);
         }
 
         // Download the video
@@ -48,7 +47,7 @@ public class Downloader {
 
     /**
      * Download subtitles.
-     * @param filename
+     * @param filename - name of the file
      */
     public void downloadTranscript(String filename) {
 
@@ -56,7 +55,7 @@ public class Downloader {
         String home = System.getProperty("user.home");
 
         MyMediaVideo myMediaVideo = (MyMediaVideo) video;
-        subtitles = myMediaVideo.getTranscriptLink();
+        String subtitles = myMediaVideo.getTranscriptLink();
         if (subtitles != null) {
             // Use a BufferedInputStream to read the file
             try {
@@ -76,9 +75,9 @@ public class Downloader {
 
     /**
      * Setup the download.
-     * @param filename
-     * @param format
-     * @return
+     * @param filename - name of the file
+     * @param format - format of the file
+     * @return - setup parameters
      */
     private String[] setupDownload(String filename, String format) {
         // Get cwd
@@ -93,7 +92,7 @@ public class Downloader {
 
     /**
      * Save the video using the command.
-     * @param cmd
+     * @param cmd - command to execute
      */
     private void saveVideo(String[] cmd) {
         try {
@@ -103,6 +102,12 @@ public class Downloader {
         }
     }
 
+    /**
+     * Execute the commands passed in.
+     * @param cmd - command to execute
+     * @throws IOException - IOException
+     * @throws InterruptedException - InterruptedException
+     */
     private void executeCommands(String[] cmd) throws IOException, InterruptedException {
         ProcessBuilder pb = new ProcessBuilder(cmd);
         pb.redirectErrorStream(true);
@@ -117,31 +122,29 @@ public class Downloader {
 
     /**
      * Check if Windows or macOS and the type of executable.
-     * @param cwd
-     * @param downloadType
-     * @return
+     * @param cwd - current working directory
+     * @param downloadType - type of download
+     * @return - path to the executable
      */
     private String checkSystem(String cwd, String downloadType) {
         String path;
         if (System.getProperty("os.name").contains("Windows")) {
 
             if (downloadType.equals("MyMediaVideo")) {
-                path = cwd + "\\src\\main\\java\\com\\loadrfx\\frameworks\\ffmpeg-win.exe";
+                path = cwd + "\\src\\main\\java\\com\\loadrfx\\frameworks\\win\\ffmpeg.exe";
             } else {
-                // TODO: Add path for youtube-dl
-                path = "";
+                path = cwd + "\\src\\main\\java\\com\\loadrfx\\frameworks\\win\\yt-dlp.exe";
             }
 
         } else {
 
-            String binary = "";
+            String binary;
             if (downloadType.equals("MyMediaVideo")) {
                 binary = "/src/main/java/com/loadrfx/frameworks/mac/ffmpeg";
             } else {
                 binary = "/src/main/java/com/loadrfx/frameworks/mac/yt-dlp";
             }
 
-            // Execute chmod on ffmpeg/yt-dlp so it's executable
             chmodBinary(cwd, binary);
 
             if (downloadType.equals("MyMediaVideo")) {
@@ -154,6 +157,11 @@ public class Downloader {
         return path;
     }
 
+    /**
+     * Change the permissions of the binary.
+     * @param cwd - current working directory
+     * @param binary - binary to change permissions
+     */
     private void chmodBinary(String cwd, String binary) {
         try {
             String[] cmd = new String[]{"chmod", "+x", cwd + binary};
@@ -165,9 +173,9 @@ public class Downloader {
 
     /**
      * Return the command-to-use if the video is from MyMedia.
-     * @param filename
-     * @param path
-     * @return
+     * @param filename - name of the file
+     * @param path - path of the file
+     * @return - command to use
      */
     private String[] commandMyMedia(String filename, String path) {
         String[] cmd;
@@ -177,11 +185,17 @@ public class Downloader {
         return cmd;
     }
 
-    private String[] commandYoutube(String filename, String path, String format) {
+    /**
+     * Return the command-to-use if the video is from YouTube.
+     * @param filename - name of the file
+     * @param path - path of the file
+     * @return - command to use
+     */
+    private String[] commandYoutube(String filename, String path) {
         String[] cmd;
         YoutubeVideo youtubeVideo = (YoutubeVideo) video;
 
-        cmd = new String[]{path, "-o", filename, "-S", "res:1080", youtubeVideo.getLink()};
+        cmd = new String[]{path, "-o", filename.split("\\.")[0], "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4", youtubeVideo.getLink()};
         return cmd;
     }
 }

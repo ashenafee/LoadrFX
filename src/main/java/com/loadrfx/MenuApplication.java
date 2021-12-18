@@ -43,7 +43,7 @@ public class MenuApplication extends Application {
 
     /**
      * Configure the combo boxes
-     * @param scene
+     * @param scene The scene to configure
      */
     private void configureComboBoxes(Scene scene) {
         // Configure the provider combo box
@@ -58,12 +58,17 @@ public class MenuApplication extends Application {
         formatComboBox.getItems().add(Format.MOV);
         formatComboBox.getItems().add(Format.MP4);
         formatComboBox.getItems().add(Format.WMV);
+
+        // Disable formatComboBox if Youtube is selected
+        BooleanBinding youtubeSelected = Bindings.createBooleanBinding(() ->
+                providerComboBox.getValue().equals("Youtube"), providerComboBox.valueProperty());
+        formatComboBox.disableProperty().bind(youtubeSelected);
     }
 
     /**
      * Configure the buttons
-     * @param scene
-     * @param stage
+     * @param scene The scene to configure
+     * @param stage The stage to configure
      */
     private void configureButtons(Scene scene, Stage stage) {
         // Configure exit button
@@ -72,22 +77,22 @@ public class MenuApplication extends Application {
 
         // Configure clear button
         Button clearButton = (Button) scene.lookup("#clearButton");
-        clearButton.setOnMouseClicked(event -> {clearButton(scene);} );
+        clearButton.setOnMouseClicked(event -> clearButton(scene));
 
         // Configure download button
         Button downloadButton = (Button) scene.lookup("#downloadButton");
-        downloadButton.setOnMouseClicked(event -> {downloadButton(scene);} );
+        downloadButton.setOnMouseClicked(event -> downloadButton(scene));
         disableDownload(scene, downloadButton);
 
         // Configure location button
         Button locationButton = (Button) scene.lookup("#locationButton");
-        locationButton.setOnMouseClicked(event -> {locationButton(scene);} );
+        locationButton.setOnMouseClicked(event -> locationButton(scene));
     }
 
     /**
      * Wait for all fields to be filled before enabling the download button.
-     * @param scene
-     * @param downloadButton
+     * @param scene The scene to configure
+     * @param downloadButton The download button to configure
      */
     private void disableDownload(Scene scene, Button downloadButton) {
         TextField videoInput = (TextField) scene.lookup("#videoInput");
@@ -95,21 +100,18 @@ public class MenuApplication extends Application {
         ComboBox<String> providerComboBox = (ComboBox<String>) scene.lookup("#providerCombo");
         ComboBox<Format> formatComboBox = (ComboBox<Format>) scene.lookup("#formatCombo");
 
-        BooleanBinding videoInputBinding = Bindings.createBooleanBinding(() -> {
-            return !videoInput.getText().isEmpty();
-        }, videoInput.textProperty());
+        BooleanBinding videoInputBinding = Bindings.createBooleanBinding(() ->
+                !videoInput.getText().isEmpty(), videoInput.textProperty());
 
-        BooleanBinding filenameInputBinding = Bindings.createBooleanBinding(() -> {
-            return !filenameInput.getText().isEmpty();
-        }, filenameInput.textProperty());
+        BooleanBinding filenameInputBinding = Bindings.createBooleanBinding(() ->
+                !filenameInput.getText().isEmpty(), filenameInput.textProperty());
 
-        BooleanBinding providerComboBoxBinding = Bindings.createBooleanBinding(() -> {
-            return providerComboBox.getItems().contains(providerComboBox.getValue());
-                }, providerComboBox.valueProperty());
+        BooleanBinding providerComboBoxBinding = Bindings.createBooleanBinding(() ->
+                providerComboBox.getItems().contains(providerComboBox.getValue()), providerComboBox.valueProperty());
 
-        BooleanBinding formatComboBoxBinding = Bindings.createBooleanBinding(() -> {
-            return formatComboBox.getItems().contains(formatComboBox.getValue());
-                }, formatComboBox.valueProperty());
+        BooleanBinding formatComboBoxBinding = Bindings.createBooleanBinding(() ->
+                formatComboBox.getItems().contains(formatComboBox.getValue()) ||
+                        !formatComboBox.isDisabled(), formatComboBox.valueProperty());
 
         downloadButton.disableProperty().bind(videoInputBinding.not()
                 .or(filenameInputBinding.not())
@@ -119,7 +121,7 @@ public class MenuApplication extends Application {
 
     /**
      * Sets the location button to open a file chooser
-     * @param scene
+     * @param scene The scene to configure
      */
     private void locationButton(Scene scene) {
         FileChooser fileChooser = new FileChooser();
@@ -136,7 +138,7 @@ public class MenuApplication extends Application {
 
     /**
      * Set the clear button to clear all inputs
-     * @param scene
+     * @param scene The scene to configure
      */
     private void clearButton(Scene scene) {
         TextField videoInput = (TextField) scene.lookup("#videoInput");
@@ -154,7 +156,7 @@ public class MenuApplication extends Application {
 
     /**
      * Set the download button to download the video
-     * @param scene
+     * @param scene The scene to configure
      */
     private void downloadButton(Scene scene) {
         TextField videoInput = (TextField) scene.lookup("#videoInput");
@@ -172,7 +174,7 @@ public class MenuApplication extends Application {
         ComboBox<Format> formatComboBox = (ComboBox<Format>) scene.lookup("#formatCombo");
 
         if (providerComboBox.getValue().equals("Youtube")) {
-            downloadYoutube(scene, videoUrl, filename, formatComboBox);
+            downloadYoutube(scene, videoUrl, filename);
         } else if (providerComboBox.getValue().equals("MyMedia")) {
             downloadMyMedia(scene, videoUrl, filename, formatComboBox);
         }
@@ -180,10 +182,10 @@ public class MenuApplication extends Application {
 
     /**
      * Download the video from MyMedia on a separate thread
-     * @param scene
-     * @param videoUrl
-     * @param filename
-     * @param formatComboBox
+     * @param scene The scene to configure
+     * @param videoUrl The video url
+     * @param filename The filename
+     * @param formatComboBox The format combo box
      */
     private void downloadMyMedia(Scene scene, String videoUrl, String filename, ComboBox<Format> formatComboBox) {
         MyMediaVideo myMediaVideo = new MyMediaVideo(videoUrl);
@@ -212,12 +214,11 @@ public class MenuApplication extends Application {
 
     /**
      * Download the video from YouTube on a separate thread
-     * @param scene
-     * @param videoUrl
-     * @param filename
-     * @param formatComboBox
+     * @param scene The scene to configure
+     * @param videoUrl The video url
+     * @param filename The filename
      */
-    private void downloadYoutube(Scene scene, String videoUrl, String filename, ComboBox<Format> formatComboBox) {
+    private void downloadYoutube(Scene scene, String videoUrl, String filename) {
         YoutubeVideo myMediaVideo = new YoutubeVideo(videoUrl);
         Downloader downloader = new Downloader(myMediaVideo);
 
@@ -227,7 +228,7 @@ public class MenuApplication extends Application {
 
         // Make thread with runnable
         Thread videoThread = new Thread(() -> {
-            downloader.downloadVideo(filename, formatComboBox.getValue().toString().toLowerCase());
+            downloader.downloadVideo(filename, "mp4");
 
             // Notify main thread that the download is complete
             Platform.runLater(() -> {
