@@ -30,7 +30,8 @@
 
 ## Disclaimer
 
-Loadr is a tool for downloading videos from MyMedia and YouTube.
+Loadr is a tool for downloading videos from MyMedia and YouTube. It uses [ffmpeg](https://ffmpeg.org/) and [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+which provide the basis of the download functionality.
 I am not responsible for any copyright infringement. Additionally, I am not responsible for any inappropriate use of this tool,
 and I am not responsible for any loss of data or other damages. What this tool does is off the input of the end-user, and not the
 developer. Use at your own risk.
