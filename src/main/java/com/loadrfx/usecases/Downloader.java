@@ -139,10 +139,17 @@ public class Downloader {
 
         // Unzip binaries from jar
         try {
-            InputStream ffmpeg = Downloader.class.getResourceAsStream("/com/loadrfx/frameworks/win/ffmpeg.exe");
-            InputStream ytdlp = Downloader.class.getResourceAsStream("/com/loadrfx/frameworks/win/yt-dlp.exe");
-            Files.copy(ffmpeg, new File("frameworks/ffmpeg.exe").toPath());
-            Files.copy(ytdlp, new File("frameworks/yt-dlp.exe").toPath());
+            if (System.getProperty("os.name").contains("Windows")) {
+                InputStream ffmpeg = Downloader.class.getResourceAsStream("/com/loadrfx/frameworks/win/ffmpeg.exe");
+                InputStream ytdlp = Downloader.class.getResourceAsStream("/com/loadrfx/frameworks/win/yt-dlp.exe");
+                Files.copy(ffmpeg, new File("frameworks/ffmpeg.exe").toPath());
+                Files.copy(ytdlp, new File("frameworks/yt-dlp.exe").toPath());
+            } else {
+                InputStream ffmpeg = Downloader.class.getResourceAsStream("/com/loadrfx/frameworks/mac/ffmpeg");
+                InputStream ytdlp = Downloader.class.getResourceAsStream("/com/loadrfx/frameworks/mac/yt-dlp");
+                Files.copy(ffmpeg, new File("frameworks/ffmpeg").toPath());
+                Files.copy(ytdlp, new File("frameworks/yt-dlp").toPath());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
