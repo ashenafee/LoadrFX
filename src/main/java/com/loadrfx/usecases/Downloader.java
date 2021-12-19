@@ -6,7 +6,9 @@ import com.loadrfx.entities.YoutubeVideo;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Objects;
+import java.util.zip.ZipFile;
 
 public class Downloader {
 
@@ -128,29 +130,50 @@ public class Downloader {
      */
     private String checkSystem(String downloadType) {
         String path;
+
+        // If frameworks folder doesn't exist, create it
+        File file = new File("frameworks");
+        if (!file.exists()) {
+            file.mkdir();
+        }
+
+        // Unzip binaries from jar
+        try {
+            InputStream ffmpeg = Downloader.class.getResourceAsStream("/com/loadrfx/frameworks/win/ffmpeg.exe");
+            InputStream ytdlp = Downloader.class.getResourceAsStream("/com/loadrfx/frameworks/win/yt-dlp.exe");
+            Files.copy(ffmpeg, new File("frameworks/ffmpeg.exe").toPath());
+            Files.copy(ytdlp, new File("frameworks/yt-dlp.exe").toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         if (System.getProperty("os.name").contains("Windows")) {
 
             if (downloadType.equals("MyMediaVideo")) {
-                path = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/win/ffmpeg.exe")).getPath();
+               path =  ".\\frameworks\\ffmpeg.exe";
             } else {
-                path = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/win/yt-dlp.exe")).getPath();
+                path = ".\\frameworks\\yt-dlp.exe";
             }
 
         } else {
 
             String binary;
             if (downloadType.equals("MyMediaVideo")) {
-                binary = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/ffmpeg")).getPath();
+                //binary = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/ffmpeg")).getPath();
+                binary = "./frameworks/ffmpeg";
             } else {
-                binary = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/yt-dlp")).getPath();
+                //binary = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/yt-dlp")).getPath();
+                binary = "./frameworks/yt-dlp";
             }
 
             chmodBinary(binary);
 
             if (downloadType.equals("MyMediaVideo")) {
-                path = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/ffmpeg")).getPath();
+                //path = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/ffmpeg")).getPath();
+                path = "./frameworks/ffmpeg";
             } else {
-                path = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/yt-dlp")).getPath();
+                //path = Objects.requireNonNull(Downloader.class.getResource("/com/loadrfx/frameworks/mac/yt-dlp")).getPath();
+                path = "./frameworks/yt-dlp";
             }
 
         }
