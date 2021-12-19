@@ -22,6 +22,16 @@
 5. If you're downloading a **MyMedia video**, select your video format from the "Format" dropdown menu (i.e., `mkv`).
 6. Click the "Download" button and wait for the progress bar to stop.
 
+## Screenshots
+
+| Menu | Example |
+|------|---------|
+|  ![image](https://user-images.githubusercontent.com/20289287/146665736-c973ef2a-6a1f-4cc5-924e-4bd65610decf.png)| ![image](https://user-images.githubusercontent.com/20289287/146665768-0a560179-be56-4323-93d8-60ce35ab5f7a.png) |
+
+In the above example, I inputted `https://youtu.be/dQw4w9WgXcQ` to be downloaded to `C:\` and saved as `NGGYU` (because it's a YouTube video, the
+format is automatically `.mp4`). I selected `Youtube` as the video provider which then allows the `Download` button to be clicked and the video
+to be saved.
+
 ## Roadmap
 
 - [ ] Create macOS app
