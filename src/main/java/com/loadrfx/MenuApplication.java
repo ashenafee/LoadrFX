@@ -61,9 +61,14 @@ public class MenuApplication extends Application {
         formatComboBox.getItems().add(Format.WMV);
 
         // Disable formatComboBox if Youtube is selected
-        BooleanBinding youtubeSelected = Bindings.createBooleanBinding(() ->
-                providerComboBox.getValue().equals("Youtube"), providerComboBox.valueProperty());
-        formatComboBox.disableProperty().bind(youtubeSelected);
+        try {
+            BooleanBinding youtubeSelected = Bindings.createBooleanBinding(() ->
+                    providerComboBox.getValue().equals("Youtube"), providerComboBox.valueProperty());
+            formatComboBox.disableProperty().bind(youtubeSelected);
+        } catch (NullPointerException e) {
+            // Do nothing
+            System.out.println("NullPointerException");
+        }
     }
 
     /**
