@@ -12,6 +12,8 @@ saving the content that they are **paying hard earned money for**.
 ### Requirements
 
 1. [OpenJDK 17.0.1](https://openjdk.java.net/install/)
+    - Note: Please refer [here](https://www.codejava.net/java-se/download-and-install-openjdk-17) if you're having
+    difficulty with installing the OpenJDK
 2. An active internet connection
 3. A computer (Windows/macOS*)
 
