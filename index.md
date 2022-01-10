@@ -1,3 +1,5 @@
+https://github.com/ashenafee/LoadrFX/releases/latest
+
 ## Loadr
 
 Have you ever wanted to download your lecture videos, be it on MyMedia or YouTube in a quick and easy way?
