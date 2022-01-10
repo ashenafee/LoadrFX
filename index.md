@@ -1,37 +1,57 @@
-## LoadrFX
+## Loadr
 
-You can use the [editor on GitHub](https://github.com/ashenafee/LoadrFX/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Have you ever wanted to download your lecture videos, be it on MyMedia or YouTube in a quick and easy way?
+That's where Loadr comes in - a simple yet comprehensive downloader for videos hosted on either of the two
+platforms.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+With this tool, you can download lectures off MyMedia with their respective transcripts (only if origially
+enabled) and off YouTube (subtitle functionality coming soon). Despite being able to download any video off
+YouTube (as the example below shows), the primary focus of this tool is to provide ease to UofT students in
+saving the content that they are **paying hard earned money for**.
 
-### Markdown
+### Requirements
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+1. [OpenJDK 17.0.1](https://openjdk.java.net/install/)
+2. An active internet connection
+3. A computer (Windows/macOS*)
 
-```markdown
-Syntax highlighted code block
+### Download
 
-# Header 1
-## Header 2
-### Header 3
+1. Download the correct file for your operating system:
+    - [Windows]()
+    - macOS*
 
-- Bulleted
-- List
+### Usage
 
-1. Numbered
-2. List
+1. Open Loadr.
+2. Input your video link in the first textbox (i.e., `https://youtu.be/dQw4w9WgXcQ`).
+3. Select your preferred download location with the "Save as..." button.
+4. Select the source of the video from the "Provider" dropdown menu (i.e., `Youtube`).
+5. If you're downloading a **MyMedia video**, select your video format from the "Format" dropdown menu (i.e., `mkv`).
+6. Click the "Download" button and wait for the progress bar to stop.
 
-**Bold** and _Italic_ and `Code` text
+### Screenshots
 
-[Link](url) and ![Image](src)
-```
+| Menu | Example |
+|------|---------|
+|  ![image](https://user-images.githubusercontent.com/20289287/146665736-c973ef2a-6a1f-4cc5-924e-4bd65610decf.png)| ![image](https://user-images.githubusercontent.com/20289287/146665768-0a560179-be56-4323-93d8-60ce35ab5f7a.png) |
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+In the above example, I inputted `https://youtu.be/dQw4w9WgXcQ` to be downloaded to `C:\` and saved as `NGGYU` (because it's a YouTube video, the
+format is automatically `.mp4`). I selected `Youtube` as the video provider which then allows the `Download` button to be clicked and the video
+to be saved.
 
-### Jekyll Themes
+### Roadmap
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ashenafee/LoadrFX/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+- [ ] Create macOS app
+- [ ] Allow download of YouTube subtitles
+- [ ] Allow custom format specification for YouTube videos
 
-### Support or Contact
+### Disclaimer
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+Loadr is a tool for downloading videos from MyMedia and YouTube. It uses [ffmpeg](https://ffmpeg.org/) and [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+which provide the basis of the download functionality.
+I am not responsible for any copyright infringement. Additionally, I am not responsible for any inappropriate use of this tool,
+and I am not responsible for any loss of data or other damages. What this tool does is off the input of the end-user, and not the
+developer. Use at your own risk.
+
+**Support for macOS coming soon!*
