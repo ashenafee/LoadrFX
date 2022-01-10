@@ -4,7 +4,7 @@ Have you ever wanted to download your lecture videos, be it on MyMedia or YouTub
 That's where Loadr comes in - a simple yet comprehensive downloader for videos hosted on either of the two
 platforms.
 
-With this tool, you can download lectures off MyMedia with their respective transcripts (only if origially
+With this tool, you can download lectures off MyMedia with their respective transcripts (only if originally
 enabled) and off YouTube (subtitle functionality coming soon). Despite being able to download any video off
 YouTube (as the example below shows), the primary focus of this tool is to provide ease to UofT students in
 saving the content that they are **paying hard earned money for**.
