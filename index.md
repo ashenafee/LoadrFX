@@ -18,7 +18,7 @@ saving the content that they are **paying hard earned money for**.
 ### Download
 
 1. Download the correct file for your operating system:
-    - [Windows]()
+    - Windows
     - macOS*
 
 ### Usage
