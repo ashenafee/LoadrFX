@@ -47,6 +47,7 @@ to be saved.
 - [ ] Create macOS app
 - [ ] Allow download of YouTube subtitles
 - [ ] Allow custom format specification for YouTube videos
+- [ ] Bundle the app with an installer to avoid the tedious download/setup of OpenJDK
 
 ### Disclaimer
 
